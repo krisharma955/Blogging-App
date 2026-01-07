@@ -2,6 +2,7 @@ package com.K955.Blog_App.Service.Impl;
 
 import com.K955.Blog_App.Dto.Auth.UserProfileResponse;
 import com.K955.Blog_App.Entity.User;
+import com.K955.Blog_App.Error.ResourceNotFoundException;
 import com.K955.Blog_App.Mapper.UserMapper;
 import com.K955.Blog_App.Repository.UserRepository;
 import com.K955.Blog_App.Service.UserService;
@@ -24,7 +25,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileResponse getProfile(Long userId) {
 
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(userId, "User"));
 
         return userMapper.toUserProfileResponseFromUser(user);
     }

@@ -5,6 +5,7 @@ import com.K955.Blog_App.Dto.Blog.BlogResponse;
 import com.K955.Blog_App.Dto.Blog.BlogSummaryResponse;
 import com.K955.Blog_App.Entity.Blog;
 import com.K955.Blog_App.Entity.User;
+import com.K955.Blog_App.Error.ResourceNotFoundException;
 import com.K955.Blog_App.Mapper.BlogMapper;
 import com.K955.Blog_App.Repository.BlogRepository;
 import com.K955.Blog_App.Repository.UserRepository;
@@ -51,7 +52,8 @@ public class BlogServiceImpl implements BlogService {
     public BlogResponse getBlogById(Long id, Long userId) {
         //replace with accessible projects by user
 
-        Blog blog = blogRepository.findById(id).orElseThrow();
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
 
         return blogMapper.toBlogResponseFromBlog(blog);
     }
@@ -68,7 +70,8 @@ public class BlogServiceImpl implements BlogService {
     public BlogResponse updateBlog(Long id, BlogRequest request, Long userId) {
         //replace with accessible projects by user
 
-        Blog blog = blogRepository.findById(id).orElseThrow();
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
 
         blog.setTitle(request.title());
         blog.setContent(request.content());
@@ -82,7 +85,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void deleteBlog(Long id, Long userId) {
 
-        Blog blog = blogRepository.findById(id).orElseThrow();
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
 
         blog.setDeletedAt(Instant.now());
 
