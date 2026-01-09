@@ -34,7 +34,8 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogResponse createBlog(BlogRequest request, Long userId) {
 
-        User owner = userRepository.findById(userId).orElseThrow();
+        User owner = userRepository.findById(userId)
+                .orElseThrow( () -> new ResourceNotFoundException(userId.toString(), "User"));
 
         Blog blog = Blog.builder()
                 .owner(owner)
@@ -53,7 +54,7 @@ public class BlogServiceImpl implements BlogService {
         //replace with accessible projects by user
 
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
+                .orElseThrow(() -> new ResourceNotFoundException(id.toString(), "Blog"));
 
         return blogMapper.toBlogResponseFromBlog(blog);
     }
@@ -71,7 +72,7 @@ public class BlogServiceImpl implements BlogService {
         //replace with accessible projects by user
 
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
+                .orElseThrow(() -> new ResourceNotFoundException(id.toString(), "Blog"));
 
         blog.setTitle(request.title());
         blog.setContent(request.content());
@@ -86,7 +87,7 @@ public class BlogServiceImpl implements BlogService {
     public void deleteBlog(Long id, Long userId) {
 
         Blog blog = blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id, "Blog"));
+                .orElseThrow(() -> new ResourceNotFoundException(id.toString(), "Blog"));
 
         blog.setDeletedAt(Instant.now());
 

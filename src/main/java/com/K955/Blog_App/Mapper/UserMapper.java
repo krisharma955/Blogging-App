@@ -1,5 +1,6 @@
 package com.K955.Blog_App.Mapper;
 
+import com.K955.Blog_App.Dto.Auth.SignupRequest;
 import com.K955.Blog_App.Dto.Auth.UserProfileResponse;
 import com.K955.Blog_App.Entity.User;
 import org.mapstruct.Mapper;
@@ -8,5 +9,7 @@ import org.mapstruct.Mapper;
 public interface UserMapper {
 
     UserProfileResponse toUserProfileResponseFromUser(User user);
+
+    User toUserFromSignupRequest(SignupRequest request);
 
 }

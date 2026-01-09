@@ -4,6 +4,7 @@ import com.K955.Blog_App.Dto.Auth.AuthResponse;
 import com.K955.Blog_App.Dto.Auth.LoginRequest;
 import com.K955.Blog_App.Dto.Auth.SignupRequest;
 import com.K955.Blog_App.Dto.Auth.UserProfileResponse;
+import com.K955.Blog_App.Security.AuthUtil;
 import com.K955.Blog_App.Service.AuthService;
 import com.K955.Blog_App.Service.UserService;
 import lombok.AccessLevel;
@@ -22,6 +23,8 @@ public class AuthController {
 
     UserService userService;
 
+    AuthUtil authUtil;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest request) {
         return ResponseEntity.ok(authService.signup(request));
@@ -34,7 +37,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getProfile() {
-        Long userId = 1L;
+        Long userId = authUtil.getCurrentUserId();
         return ResponseEntity.ok(userService.getProfile(userId));
     }
 
