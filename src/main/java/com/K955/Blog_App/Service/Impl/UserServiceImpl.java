@@ -6,7 +6,6 @@ import com.K955.Blog_App.Error.ResourceNotFoundException;
 import com.K955.Blog_App.Mapper.UserMapper;
 import com.K955.Blog_App.Repository.UserRepository;
 import com.K955.Blog_App.Service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +31,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         return userMapper.toUserProfileResponseFromUser(user);
     }
+
+    @Override
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(userId.toString(), "User"))
+;    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
