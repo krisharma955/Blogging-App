@@ -1,5 +1,6 @@
 package com.K955.Blog_App.Security;
 
+import com.K955.Blog_App.Handlers.OAuth2SuccessHandler;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,18 +25,21 @@ public class WebSecurityConfig {
 
     JwtAuthFilter jwtAuthFilter;
 
+    OAuth2SuccessHandler oAuth2SuccessHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         return httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/auth/**", "/home.html").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2Config -> oauth2Config
                         .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler)
                 )
                 .build();
     }

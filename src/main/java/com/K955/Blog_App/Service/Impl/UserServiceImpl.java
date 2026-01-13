@@ -35,8 +35,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(userId.toString(), "User"))
-;    }
+                .orElseThrow(() -> new ResourceNotFoundException(userId.toString(), "User"));
+    }
+
+    @Override
+    public User saveNewUser(User user) {
+        return userRepository.save(user);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
