@@ -5,6 +5,7 @@ import com.K955.Blog_App.Dto.Blog.BlogResponse;
 import com.K955.Blog_App.Dto.Blog.BlogSummaryResponse;
 import com.K955.Blog_App.Entity.Blog;
 import com.K955.Blog_App.Entity.User;
+import com.K955.Blog_App.Error.BadRequestException;
 import com.K955.Blog_App.Error.ResourceNotFoundException;
 import com.K955.Blog_App.Mapper.BlogMapper;
 import com.K955.Blog_App.Repository.BlogRepository;
@@ -56,7 +57,11 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id.toString(), "Blog"));
 
-        return blogMapper.toBlogResponseFromBlog(blog);
+        if(blog.getIsPublic().equals(true) || (blog.getIsPublic().equals(false) && blog.getOwner().getId().equals(userId))) {
+            return blogMapper.toBlogResponseFromBlog(blog);
+        }
+
+        throw new BadRequestException("Access Denied");
     }
 
     @Override
@@ -89,8 +94,11 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id.toString(), "Blog"));
 
-        blog.setDeletedAt(Instant.now());
+        if(blog.getOwner().getId().equals(userId)) {
+            blog.setDeletedAt(Instant.now());
+            blogRepository.save(blog);
+        }
 
-        blogRepository.save(blog);
+        throw new BadRequestException("ACCESS DENIED");
     }
 }
