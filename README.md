@@ -224,8 +224,6 @@ Authorization: Bearer {accessToken}
 ### OAuth 2.0 Integration
 The application supports OAuth 2.0 authentication with popular providers:
 - Google
-- GitHub
-- Facebook
 - (Configurable in application properties)
 
 ### Password Security
